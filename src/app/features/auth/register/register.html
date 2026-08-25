@@ -27,13 +27,13 @@
             <!-- Name -->
             <div class="field">
                 <label class="label" for="name">Name</label>
-                <input id="name" class="input" [class.input-error]="nameControl?.invalid && nameControl.touched"
+                <input id="name" class="input" [class.input-error]="nameControl?.invalid && nameControl!.touched"
                     type="text" formControlName="name" placeholder="John Doe" autocomplete="name" />
-                @if (nameControl?.invalid && nameControl.touched) {
+                @if (nameControl?.invalid && nameControl!.touched) {
                 <span class="field-error">
-                    @if (nameControl.hasError('required')) {
+                    @if (nameControl!.hasError('required')) {
                     Name is required
-                    } @else if (nameControl.hasError('minlength')) {
+                    } @else if (nameControl!.hasError('minlength')) {
                     Name must be at least 2 characters
                     }
                 </span>
@@ -43,13 +43,13 @@
             <!-- Email -->
             <div class="field">
                 <label class="label" for="email">Email</label>
-                <input id="email" class="input" [class.input-error]="emailControl?.invalid && emailControl.touched"
+                <input id="email" class="input" [class.input-error]="emailControl?.invalid && emailControl?.touched"
                     type="email" formControlName="email" placeholder="you@example.com" autocomplete="email" />
-                @if (emailControl?.invalid && emailControl.touched) {
+                @if (emailControl?.invalid && emailControl?.touched) {
                 <span class="field-error">
-                    @if (emailControl.hasError('required')) {
+                    @if (emailControl?.hasError('required')) {
                     Email is required
-                    } @else if (emailControl.hasError('email')) {
+                    } @else if (emailControl?.hasError('email')) {
                     Please enter a valid email
                     }
                 </span>
@@ -61,7 +61,7 @@
                 <label class="label" for="password">Password</label>
                 <div class="password-wrapper">
                     <input id="password" class="input"
-                        [class.input-error]="passwordControl?.invalid && passwordControl.touched"
+                        [class.input-error]="passwordControl!.invalid && passwordControl!.touched"
                         [type]="showPassword() ? 'text' : 'password'" formControlName="password"
                         placeholder="Min 8 characters" autocomplete="new-password" />
                     <button type="button" class="password-toggle" (click)="togglePassword()"
@@ -80,11 +80,11 @@
                         }
                     </button>
                 </div>
-                @if (passwordControl?.invalid && passwordControl.touched) {
+                @if (passwordControl!.invalid && passwordControl!.touched) {
                 <span class="field-error">
-                    @if (passwordControl.hasError('required')) {
+                    @if (passwordControl!.hasError('required')) {
                     Password is required
-                    } @else if (passwordControl.hasError('minlength')) {
+                    } @else if (passwordControl!.hasError('minlength')) {
                     Password must be at least 8 characters
                     }
                 </span>

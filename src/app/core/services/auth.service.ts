@@ -1,8 +1,9 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+
 import { environment } from '../../../environments/environment';
-import { LoginRequest, LoginResponse, RefreshResponse, RegisterRequest, User } from '../models/user.model';
+import { LoginRequest, LoginResponse, RegisterRequest, User } from '../models/user.model';
 
 const TOKEN_KEY = 'tm.access_token';
 const USER_KEY = 'tm.user';
@@ -11,6 +12,7 @@ const USER_KEY = 'tm.user';
 export class AuthService {
     private tokenSignal = signal<string | null>(localStorage.getItem(TOKEN_KEY));
     private userSignal = signal<User | null>(this.readUser());
+    private refreshPromise: Promise<boolean> | null = null;
 
     readonly token = this.tokenSignal.asReadonly();
     readonly user = this.userSignal.asReadonly();
@@ -55,15 +57,32 @@ export class AuthService {
                 ),
             );
         } catch {
-            // Best effort - clear local session regardless
+            // Best effort
         }
         this.clearSession();
     }
 
-    async refresh(): Promise<boolean> {
+    // Called by interceptor - handles concurrent refresh
+    refresh(): Promise<boolean> {
+        if (!this.refreshPromise) {
+            this.refreshPromise = this.doRefresh()
+                .catch(() => false)
+                .finally(() => (this.refreshPromise = null));
+        }
+        return this.refreshPromise;
+    }
+
+    clearSession(): void {
+        this.tokenSignal.set(null);
+        this.userSignal.set(null);
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(USER_KEY);
+    }
+
+    private async doRefresh(): Promise<boolean> {
         try {
             const res = await firstValueFrom(
-                this.http.post<RefreshResponse>(
+                this.http.post<{ access_token: string }>(
                     `${environment.apiUrl}/api/v1/auth/refresh`,
                     {},
                     { withCredentials: true },
@@ -78,20 +97,11 @@ export class AuthService {
         }
     }
 
-    // ==================== PRIVATE ====================
-
     private setSession(token: string, user: User): void {
         this.tokenSignal.set(token);
         this.userSignal.set(user);
         localStorage.setItem(TOKEN_KEY, token);
         localStorage.setItem(USER_KEY, JSON.stringify(user));
-    }
-
-    private clearSession(): void {
-        this.tokenSignal.set(null);
-        this.userSignal.set(null);
-        localStorage.removeItem(TOKEN_KEY);
-        localStorage.removeItem(USER_KEY);
     }
 
     private readUser(): User | null {

@@ -1,1 +1,129 @@
-<p>teams-list works!</p>
+<main class="page">
+    <!-- Header -->
+    <header class="page-head">
+        <div>
+            <h1 class="page-title">{{ greeting }}</h1>
+            <p class="page-subtitle">Your teams and the work you're tracking with them.</p>
+        </div>
+        <button class="btn btn-primary btn-lg" type="button" (click)="toggleForm()">
+            @if (showForm()) {
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+            Cancel
+            } @else {
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Create team
+            }
+        </button>
+    </header>
+
+    <!-- Alerts -->
+    @if (error()) {
+    <div class="alert alert-error" role="alert">
+        <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clip-rule="evenodd" />
+        </svg>
+        {{ error() }}
+    </div>
+    }
+    @if (notice()) {
+    <div class="alert alert-success" role="alert">
+        <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd" />
+        </svg>
+        {{ notice() }}
+    </div>
+    }
+
+    <!-- Create Team Form -->
+    @if (showForm()) {
+    <section class="card create-card">
+        <h2 class="card-title">Create a team</h2>
+        <p class="card-subtitle">Give your team a clear, recognizable name.</p>
+
+        <form class="form" [formGroup]="teamForm" (ngSubmit)="create()" novalidate>
+            <div class="field">
+                <label class="label" for="teamName">Team name</label>
+                <input id="teamName" class="input" [class.input-error]="nameControl?.invalid && nameControl?.touched"
+                    type="text" formControlName="name" placeholder="e.g. Platform Engineering" autofocus />
+                @if (nameControl?.invalid && nameControl?.touched) {
+                <span class="field-error">
+                    @if (nameControl?.hasError('required')) {
+                    Team name is required
+                    } @else if (nameControl?.hasError('minlength')) {
+                    Team name must be at least 2 characters
+                    }
+                </span>
+                }
+            </div>
+
+            <div class="row">
+                <button class="btn btn-primary" type="submit" [disabled]="creating() || teamForm.invalid">
+                    @if (creating()) {
+                    <span class="spinner"></span>
+                    Creating…
+                    } @else {
+                    Create team
+                    }
+                </button>
+            </div>
+        </form>
+    </section>
+    }
+
+    <!-- Loading -->
+    @if (loading()) {
+    <div class="loading-state">
+        <span class="spinner spinner-lg"></span>
+        <p class="text-muted">Loading teams…</p>
+    </div>
+    }
+
+    <!-- Empty State -->
+    @else if (teams().length === 0) {
+    <section class="card empty-state">
+        <div class="empty-icon">🗂️</div>
+        <h2 class="empty-title">No teams yet</h2>
+        <p class="empty-text text-muted">You don't belong to any teams yet. Create your first team to start
+            collaborating.</p>
+        <button class="btn btn-primary btn-lg" type="button" (click)="toggleForm()">
+            Create your first team
+        </button>
+    </section>
+    }
+
+    <!-- Teams Grid -->
+    @else {
+    <div class="team-grid">
+        @for (team of teams(); track team.id) {
+        <a class="team-card" [routerLink]="['/teams', team.id]">
+            <span class="team-card-banner" [style.background]="teamColor(team.id)">
+                {{ teamInitials(team.name) }}
+            </span>
+            <div class="team-card-body">
+                <div class="team-card-name">{{ team.name }}</div>
+                <div class="team-card-meta text-muted">
+                    Created {{ formatDate(team.created_at) }}
+                </div>
+            </div>
+            <span class="team-card-cta">
+                Open board
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                </svg>
+            </span>
+        </a>
+        }
+    </div>
+    }
+</main>
