@@ -1,1 +1,198 @@
-<p>task-detail works!</p>
+<div class="drawer-overlay" (click)="close()">
+    <aside class="drawer" (click)="$event.stopPropagation()">
+        @if (loading()) {
+        <div class="drawer-body loading-state">
+            <span class="spinner spinner-lg"></span>
+            <p class="text-muted">Loading task…</p>
+        </div>
+        } @else if (task(); as task) {
+        <!-- Header -->
+        <header class="drawer-head">
+            <div>
+                <span class="lozenge {{ task.status }}">{{ statusLabel(task.status) }}</span>
+                <h2 class="drawer-title">{{ task.title }}</h2>
+            </div>
+            <button class="drawer-close" type="button" (click)="close()" aria-label="Close">×</button>
+        </header>
+
+        <!-- Tabs -->
+        <nav class="drawer-tabs tabs">
+            <button class="tab" type="button" [class.active]="detailTab() === 'details'"
+                (click)="detailTab.set('details')">
+                Details
+            </button>
+            <button class="tab" type="button" [class.active]="detailTab() === 'comments'"
+                (click)="detailTab.set('comments')">
+                Comments
+                @if (comments().length) {
+                <span class="tab-badge">{{ comments().length }}</span>
+                }
+            </button>
+            <button class="tab" type="button" [class.active]="detailTab() === 'history'"
+                (click)="detailTab.set('history')">
+                History
+            </button>
+        </nav>
+
+        <!-- Alerts -->
+        @if (error()) {
+        <div class="alert alert-error" role="alert">{{ error() }}</div>
+        }
+        @if (notice()) {
+        <div class="alert alert-success" role="alert">{{ notice() }}</div>
+        }
+        @if (isClosed()) {
+        <div class="alert alert-warning" role="alert">
+            This task is closed and can no longer be edited.
+        </div>
+        }
+
+        <!-- Details Tab -->
+        @if (detailTab() === 'details') {
+        <div class="drawer-body">
+            <form class="form" (ngSubmit)="save()">
+                <div class="field">
+                    <label class="label" for="editTitle">Title</label>
+                    <input id="editTitle" class="input" type="text" name="editTitle" [(ngModel)]="form.title"
+                        [disabled]="isClosed()" />
+                </div>
+
+                <div class="field-grid">
+                    <div class="field">
+                        <label class="label" for="editStatus">Status</label>
+                        <select id="editStatus" class="select" name="editStatus" [(ngModel)]="form.status"
+                            [disabled]="isClosed()">
+                            @for (s of STATUS_OPTIONS; track s) {
+                            <option [value]="s">{{ statusLabel(s) }}</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label class="label" for="editAssignee">Assignee</label>
+                        <select id="editAssignee" class="select" name="editAssignee" [(ngModel)]="form.assignee_id"
+                            [disabled]="isClosed()">
+                            <option [value]="">Unassigned</option>
+                            @for (m of members(); track m.user_id) {
+                            <option [value]="m.user_id">{{ m.name || m.email }}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="editDesc">Description</label>
+                    <textarea id="editDesc" class="input" rows="5" name="editDesc" placeholder="Add a description…"
+                        [(ngModel)]="form.description" [disabled]="isClosed()"></textarea>
+                </div>
+
+                @if (!isClosed()) {
+                <div class="row save-row">
+                    <button class="btn btn-primary" type="submit" [disabled]="saving() || !isDirty()">
+                        @if (saving()) {
+                        <span class="spinner"></span>
+                        Saving…
+                        } @else {
+                        Save changes
+                        }
+                    </button>
+                </div>
+                }
+            </form>
+
+            <hr class="divider" />
+
+            <div class="detail-meta">
+                <div class="detail-field">
+                    <span class="detail-label">Created</span>
+                    <span class="detail-value">{{ formatDateTime(task.created_at) }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="detail-label">Last updated</span>
+                    <span class="detail-value">{{ formatDateTime(task.updated_at) }}</span>
+                </div>
+                @if (task.closed_at) {
+                <div class="detail-field">
+                    <span class="detail-label">Closed</span>
+                    <span class="detail-value">{{ formatDateTime(task.closed_at) }}</span>
+                </div>
+                }
+                <div class="detail-field">
+                    <span class="detail-label">Version</span>
+                    <span class="detail-value">v{{ task.version }}</span>
+                </div>
+            </div>
+        </div>
+        }
+
+        <!-- Comments Tab -->
+        @if (detailTab() === 'comments') {
+        <div class="drawer-body">
+            @if (!isClosed()) {
+            <form class="form comment-form" (ngSubmit)="addComment()">
+                <textarea class="input" rows="3" name="newComment" placeholder="Write a comment…"
+                    [(ngModel)]="newComment"></textarea>
+                <div class="row" style="justify-content: flex-end">
+                    <button class="btn btn-primary btn-sm" type="submit"
+                        [disabled]="commenting() || !newComment.trim()">
+                        @if (commenting()) {
+                        <span class="spinner spinner-sm"></span>
+                        Posting…
+                        } @else {
+                        Comment
+                        }
+                    </button>
+                </div>
+            </form>
+            }
+
+            @if (comments().length === 0) {
+            <div class="empty-state">
+                <div class="empty-icon">💬</div>
+                <p class="text-muted">No comments yet.</p>
+            </div>
+            } @else {
+            <ul class="comment-list">
+                @for (c of comments(); track c.id) {
+                <li class="comment">
+                    <div class="comment-head">
+                        <span class="comment-author">{{ memberNameById(c.user_id) }}</span>
+                        <span class="text-muted comment-time">{{ formatDateTime(c.created_at) }}</span>
+                    </div>
+                    <p class="comment-body">{{ c.content }}</p>
+                </li>
+                }
+            </ul>
+            }
+        </div>
+        }
+
+        <!-- History Tab -->
+        @if (detailTab() === 'history') {
+        <div class="drawer-body">
+            @if (history().length === 0) {
+            <div class="empty-state">
+                <div class="empty-icon">📜</div>
+                <p class="text-muted">No history recorded.</p>
+            </div>
+            } @else {
+            <ul class="history-list">
+                @for (h of history(); track h.id) {
+                <li class="history-item">
+                    <div class="history-head">
+                        <span class="history-author">{{ memberNameById(h.changed_by) }}</span>
+                        <span class="text-muted">{{ formatDateTime(h.created_at) }}</span>
+                    </div>
+                    <pre class="history-changes">{{ formatChanges(h.changes) }}</pre>
+                </li>
+                }
+            </ul>
+            }
+        </div>
+        }
+        } @else {
+        <div class="drawer-body">
+            <p class="text-muted">Task not found.</p>
+        </div>
+        }
+    </aside>
+</div>

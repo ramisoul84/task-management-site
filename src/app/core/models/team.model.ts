@@ -1,3 +1,5 @@
+export type Role = 'owner' | 'admin' | 'member';
+
 export interface Team {
     id: string;
     name: string;
@@ -9,7 +11,7 @@ export interface TeamMemberView {
     user_id: string;
     email: string;
     name: string;
-    role: 'owner' | 'admin' | 'member';
+    role: Role;
 }
 
 export interface InviteRequest {
