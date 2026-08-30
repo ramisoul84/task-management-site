@@ -96,7 +96,7 @@
             </select>
         </div>
         <div class="row">
-            <button class="btn btn-primary" type="submit" [disabled]="creatingTask || !newTask.title.trim()">
+            <button class="btn btn-primary" type="submit" [disabled]="creatingTask() || !newTask.title.trim()">
                 @if (creatingTask()) {
                 <span class="spinner"></span>
                 Creating…
@@ -239,7 +239,7 @@
                     <option value="member">Member</option>
                 </select>
             </div>
-            <button class="btn btn-primary" type="submit" [disabled]="inviting || !inviteUserID.trim()">
+            <button class="btn btn-primary" type="submit" [disabled]="inviting() || !inviteUserID.trim()">
                 @if (inviting()) {
                 <span class="spinner"></span>
                 Inviting…
