@@ -1,0 +1,271 @@
+:host {
+    display: block;
+}
+
+.page-head {
+    margin-bottom: 1.5rem;
+}
+
+.page-title {
+    margin: 0;
+    font-size: 1.75rem;
+    color: var(--navy);
+}
+
+.page-subtitle {
+    margin: 0.25rem 0 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.profile-card {
+    max-width: 32rem;
+}
+
+// Header
+.profile-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile-head-info {
+    min-width: 0;
+}
+
+.profile-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.profile-email {
+    font-size: 0.875rem;
+}
+
+// Avatar
+.avatar {
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4c9aff, #0c66e4);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.avatar-xl {
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 1.25rem;
+}
+
+// Details
+.profile-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    font-size: 0.9rem;
+}
+
+.profile-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.85rem;
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+.profile-value {
+    font-weight: 500;
+    color: var(--navy);
+}
+
+.profile-value-id {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.id-text {
+    font-size: 0.8rem;
+    word-break: break-all;
+}
+
+// Copy button
+.btn-icon {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--muted);
+    border-radius: var(--radius);
+    transition: background 0.15s, color 0.15s;
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    &:hover {
+        background: var(--surface-2);
+        color: var(--navy);
+    }
+}
+
+// Divider
+.divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.25rem 0;
+}
+
+// Actions
+.profile-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+// Button
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.925rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s, background 0.2s;
+    text-decoration: none;
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+    }
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: #fff;
+
+    &:hover:not(:disabled) {
+        background: #b91c1c;
+    }
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4c9aff, #0c66e4);
+    color: #fff;
+
+    &:hover:not(:disabled) {
+        opacity: 0.9;
+    }
+}
+
+// Empty state
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: center;
+    padding: 2rem;
+}
+
+.empty-icon {
+    font-size: 2.5rem;
+}
+
+// Spinner
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+.spinner-sm {
+    width: 12px;
+    height: 12px;
+    border-width: 2px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// Responsive
+@media (max-width: 480px) {
+    .profile-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+}
+
+
+.copy-error {
+    font-size: 0.75rem;
+    color: #dc2626;
+    margin-top: -0.4rem;
+    padding-left: 1.5rem;
+}
+
+.copied-icon {
+    color: #16a34a;
+}
+
+.btn-icon {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--muted);
+    border-radius: var(--radius);
+    transition: background 0.15s, color 0.15s;
+    position: relative;
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    &:hover {
+        background: var(--surface-2);
+        color: var(--navy);
+    }
+}

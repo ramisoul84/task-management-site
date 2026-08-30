@@ -2,7 +2,45 @@
   <section class="auth-card">
     <!-- Brand -->
     <div class="auth-brand">
-      <span class="auth-logo">✦</span>
+      <span class="auth-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 145" role="img" aria-label="Abstract swoosh icon">
+          <defs>
+            <linearGradient id="topGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#10CFC5" />
+              <stop offset="100%" stop-color="#20C9D2" />
+            </linearGradient>
+
+            <linearGradient id="bottomGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#00A9E8" />
+              <stop offset="55%" stop-color="#078ED9" />
+              <stop offset="100%" stop-color="#08B7B5" />
+            </linearGradient>
+          </defs>
+
+          <!-- Upper swoosh -->
+          <path fill="url(#topGradient)" d="
+                                M 29 78
+                                C 38 48, 62 18, 96 7
+                                C 111 2, 128 1, 143 2
+                                C 138 16, 133 29, 126 42
+                                C 107 29, 86 28, 67 38
+                                C 50 47, 38 62, 29 78
+                                Z
+                              " />
+
+          <!-- Lower swoosh -->
+          <path fill="url(#bottomGradient)" d="
+                                M 0 140
+                                C 29 136, 54 119, 71 98
+                                C 84 82, 91 63, 96 43
+                                C 105 37, 116 32, 126 30
+                                C 120 57, 110 84, 95 105
+                                C 76 131, 46 143, 14 145
+                                C 8 145, 3 143, 0 140
+                                Z
+                              " />
+        </svg>
+      </span>
       <span>Taskflow</span>
     </div>
 
@@ -12,12 +50,14 @@
 
     <!-- Error Alert -->
     @if (error()) {
-      <div class="alert alert-error" role="alert">
-        <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-        </svg>
-        {{ error() }}
-      </div>
+    <div class="alert alert-error" role="alert">
+      <svg class="alert-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+          clip-rule="evenodd" />
+      </svg>
+      {{ error() }}
+    </div>
     }
 
     <!-- Form -->
@@ -25,23 +65,16 @@
       <!-- Email -->
       <div class="field">
         <label class="label" for="email">Email</label>
-        <input
-          id="email"
-          class="input"
-          [class.input-error]="emailControl?.invalid && emailControl?.touched"
-          type="email"
-          formControlName="email"
-          placeholder="you@example.com"
-          autocomplete="email"
-        />
+        <input id="email" class="input" [class.input-error]="emailControl?.invalid && emailControl?.touched"
+          type="email" formControlName="email" placeholder="you@example.com" autocomplete="email" />
         @if (emailControl?.invalid && emailControl?.touched) {
-          <span class="field-error">
-            @if (emailControl?.hasError('required')) {
-              Email is required
-            } @else if (emailControl?.hasError('email')) {
-              Please enter a valid email
-            }
-          </span>
+        <span class="field-error">
+          @if (emailControl?.hasError('required')) {
+          Email is required
+          } @else if (emailControl?.hasError('email')) {
+          Please enter a valid email
+          }
+        </span>
         }
       </div>
 
@@ -49,56 +82,43 @@
       <div class="field">
         <label class="label" for="password">Password</label>
         <div class="password-wrapper">
-          <input
-            id="password"
-            class="input"
-            [class.input-error]="passwordControl?.invalid && passwordControl?.touched"
-            [type]="showPassword() ? 'text' : 'password'"
-            formControlName="password"
-            placeholder="Enter your password"
-            autocomplete="current-password"
-          />
-          <button
-            type="button"
-            class="password-toggle"
-            (click)="togglePassword()"
-            [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
-          >
+          <input id="password" class="input" [class.input-error]="passwordControl?.invalid && passwordControl?.touched"
+            [type]="showPassword() ? 'text' : 'password'" formControlName="password" placeholder="Enter your password"
+            autocomplete="current-password" />
+          <button type="button" class="password-toggle" (click)="togglePassword()"
+            [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
             @if (showPassword()) {
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
-                <line x1="1" y1="1" x2="23" y2="23" />
-              </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path
+                d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+              <line x1="1" y1="1" x2="23" y2="23" />
+            </svg>
             } @else {
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
             }
           </button>
         </div>
         @if (passwordControl?.invalid && passwordControl?.touched) {
-          <span class="field-error">
-            @if (passwordControl?.hasError('required')) {
-              Password is required
-            } @else if (passwordControl?.hasError('minlength')) {
-              Password must be at least 8 characters
-            }
-          </span>
+        <span class="field-error">
+          @if (passwordControl?.hasError('required')) {
+          Password is required
+          } @else if (passwordControl?.hasError('minlength')) {
+          Password must be at least 8 characters
+          }
+        </span>
         }
       </div>
 
       <!-- Submit -->
-      <button
-        class="btn btn-primary btn-block btn-lg"
-        type="submit"
-        [disabled]="loading() || loginForm.invalid"
-      >
+      <button class="btn btn-primary btn-block btn-lg" type="submit" [disabled]="loading() || loginForm.invalid">
         @if (loading()) {
-          <span class="spinner"></span>
-          Signing in…
+        <span class="spinner"></span>
+        Signing in…
         } @else {
-          Sign in
+        Sign in
         }
       </button>
     </form>

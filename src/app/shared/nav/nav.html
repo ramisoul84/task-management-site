@@ -1,1 +1,101 @@
-<p>nav works!</p>
+<nav class="topbar">
+    <!-- Brand -->
+    <a class="topbar-brand" routerLink="/teams">
+        <span class="logo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 145"  role="img"
+                aria-label="Abstract swoosh icon">
+                <defs>
+                    <linearGradient id="topGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#10CFC5" />
+                        <stop offset="100%" stop-color="#20C9D2" />
+                    </linearGradient>
+
+                    <linearGradient id="bottomGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#00A9E8" />
+                        <stop offset="55%" stop-color="#078ED9" />
+                        <stop offset="100%" stop-color="#08B7B5" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Upper swoosh -->
+                <path fill="url(#topGradient)" d="
+                  M 29 78
+                  C 38 48, 62 18, 96 7
+                  C 111 2, 128 1, 143 2
+                  C 138 16, 133 29, 126 42
+                  C 107 29, 86 28, 67 38
+                  C 50 47, 38 62, 29 78
+                  Z
+                " />
+
+                <!-- Lower swoosh -->
+                <path fill="url(#bottomGradient)" d="
+                  M 0 140
+                  C 29 136, 54 119, 71 98
+                  C 84 82, 91 63, 96 43
+                  C 105 37, 116 32, 126 30
+                  C 120 57, 110 84, 95 105
+                  C 76 131, 46 143, 14 145
+                  C 8 145, 3 143, 0 140
+                  Z
+                " />
+            </svg>
+        </span>
+        <span>Taskflow</span>
+    </a>
+
+    <!-- Links -->
+    <div class="topbar-links">
+        <a class="topbar-link" routerLink="/teams" routerLinkActive="active">Teams</a>
+    </div>
+
+    <div class="topbar-spacer"></div>
+
+    <!-- User Menu -->
+    <div class="user-menu">
+        @if (menuOpen()) {
+        <div class="menu-backdrop" (click)="closeMenu()"></div>
+        <div class="menu" role="menu">
+            <!-- User Info -->
+            <div class="menu-header">
+                <span class="avatar avatar-lg">{{ initials }}</span>
+                <div class="menu-user-info">
+                    <div class="menu-user-name">{{ auth.user()?.name }}</div>
+                    <div class="menu-user-email">{{ auth.user()?.email }}</div>
+                </div>
+            </div>
+
+            <div class="menu-sep"></div>
+
+            <!-- Menu Items -->
+            <button class="menu-item" type="button" role="menuitem" (click)="goProfile()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                Profile
+            </button>
+
+            <div class="menu-sep"></div>
+
+            <button class="menu-item menu-item-danger" type="button" role="menuitem" (click)="logout()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Log out
+            </button>
+        </div>
+        }
+
+        <button class="user-trigger" type="button" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen()">
+            <span class="avatar">{{ initials }}</span>
+            <span class="user-name">{{ auth.user()?.name }}</span>
+            <svg class="chevron" [class.open]="menuOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2">
+                <polyline points="6 9 12 15 18 9" />
+            </svg>
+        </button>
+    </div>
+</nav>
